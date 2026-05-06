@@ -1,0 +1,18 @@
+[
+  { "id": 1, "title": "JavaScript高级程序设计", "author": "Nicholas C. Zakas", "isbn": "978-7-115-27579-0", "category": "编程技术", "price": 99.00, "stock": 50, "publishDate": "2020-05-01", "description": "前端开发经典书籍" },
+  { "id": 2, "title": "Vue.js设计与实现", "author": "霍春阳", "isbn": "978-7-115-58386-4", "category": "编程技术", "price": 89.90, "stock": 35, "publishDate": "2022-03-01", "description": "深入理解Vue.js框架原理" },
+  { "id": 3, "title": "深入理解计算机系统", "author": "Randal E. Bryant", "isbn": "978-7-111-54493-7", "category": "计算机科学", "price": 139.00, "stock": 20, "publishDate": "2016-11-01", "description": "计算机科学经典教材" },
+  { "id": 4, "title": "算法导论", "author": "Thomas H. Cormen", "isbn": "978-7-111-40701-0", "category": "计算机科学", "price": 128.00, "stock": 15, "publishDate": "2013-01-01", "description": "算法领域权威著作" },
+  { "id": 5, "title": "三体", "author": "刘慈欣", "isbn": "978-7-5366-9293-0", "category": "科幻小说", "price": 68.00, "stock": 100, "publishDate": "2008-01-01", "description": "中国科幻里程碑之作" },
+  { "id": 6, "title": "活着", "author": "余华", "isbn": "978-7-5063-6830-2", "category": "文学小说", "price": 29.00, "stock": 80, "publishDate": "2012-08-01", "description": "余华代表作" },
+  { "id": 7, "title": "CSS权威指南", "author": "Eric A. Meyer", "isbn": "978-7-508-69467-5", "category": "编程技术", "price": 108.00, "stock": 25, "publishDate": "2019-04-01", "description": "CSS领域权威参考" },
+  { "id": 8, "title": "Python编程：从入门到实践", "author": "Eric Matthes", "isbn": "978-7-115-42802-8", "category": "编程技术", "price": 79.80, "stock": 60, "publishDate": "2018-01-01", "description": "Python入门经典" },
+  { "id": 9, "title": "百年孤独", "author": "加西亚·马尔克斯", "isbn": "978-7-5442-4528-8", "category": "文学小说", "price": 39.50, "stock": 45, "publishDate": "2011-06-01", "description": "魔幻现实主义代表作" },
+  { "id": 10, "title": "数据结构与算法分析", "author": "Mark Allen Weiss", "isbn": "978-7-111-52739-8", "category": "计算机科学", "price": 69.00, "stock": 30, "publishDate": "2015-12-01", "description": "数据结构经典教材" },
+  { "id": 11, "title": "银河帝国：基地", "author": "艾萨克·阿西莫夫", "isbn": "978-7-5399-4574-0", "category": "科幻小说", "price": 35.00, "stock": 55, "publishDate": "2012-10-01", "description": "科幻巨匠经典系列" },
+  { "id": 12, "title": "React设计原理", "author": "卡颂", "isbn": "978-7-115-59016-9", "category": "编程技术", "price": 79.00, "stock": 40, "publishDate": "2022-09-01", "description": "深入React内核" },
+  { "id": 13, "title": "人类简史", "author": "尤瓦尔·赫拉利", "isbn": "978-7-5086-4633-2", "category": "历史人文", "price": 68.00, "stock": 70, "publishDate": "2014-11-01", "description": "全球畅销历史读物" },
+  { "id": 14, "title": "设计模式：可复用面向对象软件的基础", "author": "Erich Gamma", "isbn": "978-7-111-07575-2", "category": "编程技术", "price": 59.00, "stock": 18, "publishDate": "2000-09-01", "description": "GoF设计模式经典" },
+  { "id": 15, "title": "小王子", "author": "安托万·德·圣-埃克苏佩里", "isbn": "978-7-02-004234-7", "category": "文学小说", "price": 22.00, "stock": 120, "publishDate": "2003-08-01", "description": "世界经典童话" },
+  { "id": 16, "title": "枪炮、病菌与钢铁", "author": "贾雷德·戴蒙德", "isbn": "978-7-5327-6090-1", "category": "历史人文", "price": 55.00, "stock": 38, "publishDate": "2006-04-01", "description": "人类社会发展史" }
+]

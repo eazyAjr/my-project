@@ -1,0 +1,133 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html, body, #app {
+  height: 100%;
+  font-family: 'Helvetica Neue', Helvetica, 'PingFang SC', 'Hiragino Sans GB',
+    'Microsoft YaHei', Arial, sans-serif;
+}
+
+.login-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+
+  .login-card {
+    width: 420px;
+    padding: 40px;
+    background: #fff;
+    border-radius: 12px;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+
+    .login-title {
+      text-align: center;
+      font-size: 24px;
+      font-weight: 600;
+      color: #333;
+      margin-bottom: 8px;
+    }
+
+    .login-subtitle {
+      text-align: center;
+      font-size: 14px;
+      color: #999;
+      margin-bottom: 32px;
+    }
+  }
+}
+
+.layout-container {
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+
+  .layout-header {
+    height: 56px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 20px;
+    background: #fff;
+    border-bottom: 1px solid #e8e8e8;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
+
+    .header-left {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 18px;
+      font-weight: 600;
+      color: #333;
+
+      .header-icon {
+        font-size: 24px;
+        color: #409eff;
+      }
+    }
+
+    .header-right {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+  }
+
+  .layout-body {
+    flex: 1;
+    display: flex;
+    overflow: hidden;
+
+    .layout-aside {
+      width: 200px;
+      background: #fff;
+      border-right: 1px solid #e8e8e8;
+      padding-top: 8px;
+    }
+
+    .layout-main {
+      flex: 1;
+      padding: 20px;
+      background: #f5f7fa;
+      overflow-y: auto;
+    }
+  }
+}
+
+.book-manage {
+  .page-header {
+    margin-bottom: 16px;
+
+    .page-title {
+      font-size: 20px;
+      font-weight: 600;
+      color: #333;
+    }
+  }
+
+  .search-bar {
+    background: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    margin-bottom: 16px;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.05);
+  }
+
+  .table-bar {
+    background: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.05);
+
+    .table-toolbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 16px;
+    }
+  }
+}

@@ -310,6 +310,91 @@ function validateRow(row, index, allRows) {
   return errors
 }
 
+// 判断一行是否可能是表头行
+function isHeaderRow(row) {
+  if (!row || row.length === 0) return false
+  const nonEmpty = row.filter(cell => String(cell).trim() !== '')
+  if (nonEmpty.length < 3) return false // 表头至少要有3个有效列
+  // 检查是否全是说明文字（比如"说明："开头）
+  const firstCell = String(row[0] || '').trim()
+  if (firstCell.length > 20 && (firstCell.includes('说明') || firstCell.includes('必填'))) return false
+  return true
+}
+
+// 判断一行是否是纯说明/空行
+function isInfoRow(row) {
+  if (!row || row.length === 0) return true
+  const nonEmpty = row.filter(cell => String(cell).trim() !== '')
+  if (nonEmpty.length === 0) return true
+  if (nonEmpty.length === 1) {
+    const text = String(row[0] || '').trim()
+    if (text.length > 15 || text.includes('说明') || text.includes('必填') || text.includes('可选')) return true
+  }
+  return false
+}
+
+// 判断一行是否是分组表头（如"发件方信息""收件方信息"）
+function isGroupHeaderRow(row, nextRow) {
+  if (!row || row.length === 0) return false
+  const nonEmpty = row.filter(cell => String(cell).trim() !== '')
+  if (nonEmpty.length < 2) return false
+  // 如果当前行包含"信息""货物"等词，且下一行更像表头
+  const rowText = row.map(c => String(c)).join('')
+  const hasGroupKeywords = /信息|货物|数据|订单|发件|收件|发货|收货/.test(rowText)
+  if (!hasGroupKeywords) return false
+  // 检查下一行是否更像标准表头
+  if (!nextRow) return false
+  const nextNonEmpty = nextRow.filter(cell => String(cell).trim() !== '')
+  if (nextNonEmpty.length > nonEmpty.length) return true
+  return false
+}
+
+// 在多个Sheet中选择最合适的
+function selectBestSheet(workbook) {
+  const candidates = []
+  for (const sheetName of workbook.SheetNames) {
+    const ws = workbook.Sheets[sheetName]
+    const jsonData = XLSX.utils.sheet_to_json(ws, { header: 1, defval: '' })
+    // 跳过明显是说明页的Sheet
+    if (/说明|指南|guide|instruction|readme/i.test(sheetName) && jsonData.length <= 10) continue
+    // 找到表头行
+    let headerIdx = -1
+    for (let i = 0; i < Math.min(jsonData.length, 10); i++) {
+      if (isHeaderRow(jsonData[i]) && !isInfoRow(jsonData[i])) {
+        headerIdx = i
+        break
+      }
+    }
+    // 如果第0行像分组表头，检查第1行
+    if (headerIdx === 0 && jsonData.length > 1 && isGroupHeaderRow(jsonData[0], jsonData[1])) {
+      headerIdx = 1
+    }
+    if (headerIdx >= 0) {
+      candidates.push({ sheetName, jsonData, headerIdx, dataRows: jsonData.length - headerIdx - 1 })
+    }
+  }
+  // 优先选择数据行最多的Sheet
+  candidates.sort((a, b) => b.dataRows - a.dataRows)
+  return candidates.length > 0 ? candidates[0] : null
+}
+
+// 在单个Sheet中检测表头和数据起始行
+function detectHeaderAndData(jsonData) {
+  let idx = 0
+  // 跳过开头的空行和说明行
+  while (idx < jsonData.length && isInfoRow(jsonData[idx])) {
+    idx++
+  }
+  if (idx >= jsonData.length) return null
+
+  // 检查是否是分组表头
+  if (isGroupHeaderRow(jsonData[idx], jsonData[idx + 1])) {
+    return { headerRowIndex: idx + 1, dataStartIndex: idx + 2 }
+  }
+
+  return { headerRowIndex: idx, dataStartIndex: idx + 1 }
+}
+
 function handleFileChange(file) {
   const name = file.name.toLowerCase()
   if (!name.endsWith('.xlsx') && !name.endsWith('.xls')) {
@@ -329,15 +414,15 @@ function handleFileChange(file) {
       const workbook = XLSX.read(data, { type: 'array', cellFormula: false, cellHTML: false })
       parseProgress.value = 60
 
-      const sheetName = workbook.SheetNames[0]
-      if (!sheetName) {
-        ElMessage.error('Excel 文件中没有有效的工作表')
+      // 智能选择Sheet
+      const best = selectBestSheet(workbook)
+      if (!best) {
+        ElMessage.error('未能从文件中识别出有效的数据表，请检查文件格式')
         loading.value = false
         return
       }
 
-      const worksheet = workbook.Sheets[sheetName]
-      const jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1, defval: '' })
+      const { jsonData, headerIdx, dataRows } = best
       parseProgress.value = 80
 
       if (jsonData.length === 0) {
@@ -346,8 +431,13 @@ function handleFileChange(file) {
         return
       }
 
-      rawHeaders.value = jsonData[0].map(h => String(h).trim())
-      rawData.value = jsonData.slice(1).filter(row => row.some(cell => String(cell).trim() !== ''))
+      rawHeaders.value = jsonData[headerIdx].map(h => String(h).trim())
+      rawData.value = jsonData.slice(headerIdx + 1).filter(row => row.some(cell => String(cell).trim() !== ''))
+
+      // 调试日志
+      console.log('[Upload] headers:', rawHeaders.value)
+      console.log('[Upload] first data row:', rawData.value[0])
+      console.log('[Upload] total data rows:', rawData.value.length)
 
       if (rawData.value.length === 0) {
         ElMessage.error('没有有效数据行')
@@ -424,6 +514,9 @@ async function applyMapping() {
     orderStore.saveTemplate(fingerprint.value, rawHeaders.value, mappingForSave).catch(() => {})
   }
 
+  // 调试日志
+  console.log('[Mapping] mapping:', JSON.parse(JSON.stringify(mapping.value)))
+
   // 转换数据
   const converted = rawData.value.map((row, index) => {
     const item = {
@@ -445,11 +538,17 @@ async function applyMapping() {
         item[field] = row[colIndex]
       }
     }
+    if (index === 0) {
+      console.log('[Mapping] first mapped item:', JSON.parse(JSON.stringify(item)))
+      console.log('[Mapping] first raw row length:', row.length)
+    }
     return item
   })
 
   tableData.value = converted
   validateAll()
+  console.log('[Validate] total errors:', allErrors.value.length)
+  console.log('[Validate] errors:', JSON.parse(JSON.stringify(allErrors.value)))
   currentStep.value = 1
   loading.value = false
 }

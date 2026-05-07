@@ -2,17 +2,17 @@ import crypto from 'crypto'
 import * as XLSX from 'xlsx'
 
 const FIELD_ALIASES = {
-  ext_code: ['外部编码','外部单号','订单编号','单号','编号','order no','order number','external code','客户单号','外部订单号','外部编码号'],
-  sender_name: ['发件人姓名','发件人','寄件人姓名','寄件人','发货人','sender','sender name','from name','寄方','发货人姓名','发件方'],
-  sender_phone: ['发件人电话','发件人联系方式','寄件人电话','寄件人联系方式','sender phone','sender tel','from phone','寄方电话','发件人手机','寄件人手机','发件电话'],
-  sender_address: ['发件人地址','发件人完整地址','寄件人地址','寄件人完整地址','sender address','from address','发货地址','寄方地址','发件地址','寄件地址'],
-  receiver_name: ['收件人姓名','收件人','收货人姓名','收货人','收方','receiver','receiver name','to name','consignee','consignee name','收件方','收货方'],
-  receiver_phone: ['收件人电话','收件人联系方式','收货人电话','收货人联系方式','receiver phone','receiver tel','to phone','收方电话','consignee phone','收件人手机','收货人手机','收件电话','收货电话'],
-  receiver_address: ['收件人地址','收件人完整地址','收货人地址','收货人完整地址','receiver address','to address','收方地址','收货地址','consignee address','收件地址','收货地址','送达地址'],
-  weight: ['重量','重量(kg)','重量（kg）','weight','货物重量','总重量','预估重量','kg','总重','包裹重量','净重','毛重'],
-  quantity: ['件数','数量','包裹数量','包裹数','quantity','count','pieces','num','件','总件数','包裹件数','数量(件)','数量（件）'],
-  temperature_layer: ['温层','温度','温度要求','temperature','temp','temp layer','温控','温度类型','temperature layer','temperature type','温度层','温度区间'],
-  remark: ['备注','说明','附言','remark','notes','comment','description','备注信息','备注说明']
+  ext_code: ['外部编码','外部单号','订单编号','单号','编号','order no','order number','external code','客户单号','外部订单号','外部编码号','ref code','ref no','reference code','reference no'],
+  sender_name: ['发件人姓名','发件人','寄件人姓名','寄件人','发货人','sender','sender name','from name','寄方','发货人姓名','发件方','shipper','shipper name'],
+  sender_phone: ['发件人电话','发件人联系方式','寄件人电话','寄件人联系方式','sender phone','sender tel','from phone','寄方电话','发件人手机','寄件人手机','发件电话','发货电话','shipper phone','shipper tel','sender contact'],
+  sender_address: ['发件人地址','发件人完整地址','寄件人地址','寄件人完整地址','sender address','from address','发货地址','寄方地址','发件地址','寄件地址','shipper address'],
+  receiver_name: ['收件人姓名','收件人','收货人姓名','收货人','收方','receiver','receiver name','to name','consignee','consignee name','收件方','收货方','recipient','recipient name'],
+  receiver_phone: ['收件人电话','收件人联系方式','收货人电话','收货人联系方式','receiver phone','receiver tel','to phone','收方电话','consignee phone','收件人手机','收货人手机','收件电话','收货电话','recipient phone','recipient tel','receiver contact'],
+  receiver_address: ['收件人地址','收件人完整地址','收货人地址','收货人完整地址','receiver address','to address','收方地址','收货地址','consignee address','收件地址','收货地址','送达地址','recipient address','delivery address'],
+  weight: ['重量','重量(kg)','重量（kg）','weight','货物重量','总重量','预估重量','kg','总重','包裹重量','净重','毛重','weight(kg)'],
+  quantity: ['件数','数量','包裹数量','包裹数','quantity','count','pieces','num','件','总件数','包裹件数','数量(件)','数量（件）','qty','qty(pcs)','qty(pieces)'],
+  temperature_layer: ['温层','温度','温度要求','temperature','temp','temp layer','温控','温度类型','temperature layer','temperature type','温度层','温度区间','temp zone','temp requirement','temp type'],
+  remark: ['备注','说明','附言','remark','notes','comment','description','备注信息','备注说明','note']
 }
 
 const REQUIRED_FIELDS = ['sender_name','sender_phone','sender_address','receiver_name','receiver_phone','receiver_address','weight','quantity','temperature_layer']

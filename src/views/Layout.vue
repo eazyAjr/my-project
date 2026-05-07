@@ -2,8 +2,8 @@
   <div class="layout-container">
     <div class="layout-header">
       <div class="header-left">
-        <span class="header-icon">📚</span>
-        <span>图书管理系统</span>
+        <span class="header-icon">📦</span>
+        <span>万能导入 —— 多模板自动导入下单系统</span>
       </div>
       <div class="header-right">
         <el-tag>欢迎，{{ userStore.userInfo?.nickname }}</el-tag>
@@ -13,9 +13,13 @@
     <div class="layout-body">
       <div class="layout-aside">
         <el-menu :default-active="route.path" router>
-          <el-menu-item index="/book">
-            <el-icon><Reading /></el-icon>
-            <span>图书管理</span>
+          <el-menu-item index="/order-import">
+            <el-icon><Upload /></el-icon>
+            <span>批量下单导入</span>
+          </el-menu-item>
+          <el-menu-item index="/order-list">
+            <el-icon><List /></el-icon>
+            <span>已导入运单</span>
           </el-menu-item>
         </el-menu>
       </div>
@@ -29,7 +33,7 @@
 <script setup>
 import { useRoute, useRouter } from 'vue-router'
 import { useUserStore } from '@/stores/user'
-import { Reading } from '@element-plus/icons-vue'
+import { Upload, List } from '@element-plus/icons-vue'
 import { ElMessageBox } from 'element-plus'
 
 const route = useRoute()

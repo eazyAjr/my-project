@@ -4,6 +4,7 @@ import bcrypt from 'bcryptjs'
 import jwt from 'jsonwebtoken'
 import * as XLSX from 'xlsx'
 import { sql } from './_utils/db.js'
+import { setupOrderRoutes } from './order-routes.js'
 
 const app = express()
 const JWT_SECRET = process.env.JWT_SECRET || 'your-secret-key-change-in-production'
@@ -286,6 +287,9 @@ app.post('/api/books/batch', authMiddleware, async (req, res) => {
     res.status(500).json({ success: false, message: err.message || '服务器内部错误' })
   }
 })
+
+// 注册订单路由
+setupOrderRoutes(app, sql, authMiddleware)
 
 // 全局错误处理（必须放在所有路由之后）
 app.use((err, req, res, next) => {

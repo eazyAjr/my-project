@@ -15,28 +15,45 @@ html, body, #app {
   justify-content: center;
   align-items: center;
   height: 100vh;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: linear-gradient(135deg, #1a2980 0%, #26d0ce 100%);
 
   .login-card {
     width: 420px;
     padding: 40px;
-    background: #fff;
-    border-radius: 12px;
-    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+    background: rgba(255, 255, 255, 0.95);
+    border-radius: 16px;
+    box-shadow: 0 25px 80px rgba(0, 0, 0, 0.35);
+    backdrop-filter: blur(10px);
+
+    .login-icon {
+      text-align: center;
+      font-size: 48px;
+      margin-bottom: 12px;
+    }
 
     .login-title {
       text-align: center;
-      font-size: 24px;
-      font-weight: 600;
-      color: #333;
-      margin-bottom: 8px;
+      font-size: 28px;
+      font-weight: 700;
+      color: #1a2980;
+      margin-bottom: 4px;
+      letter-spacing: 2px;
+    }
+
+    .login-divider {
+      width: 60px;
+      height: 3px;
+      background: linear-gradient(90deg, #1a2980, #26d0ce);
+      margin: 10px auto;
+      border-radius: 2px;
     }
 
     .login-subtitle {
       text-align: center;
       font-size: 14px;
-      color: #999;
+      color: #666;
       margin-bottom: 32px;
+      font-weight: 500;
     }
   }
 }

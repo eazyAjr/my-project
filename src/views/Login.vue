@@ -1,8 +1,10 @@
 <template>
   <div class="login-container">
     <div class="login-card">
-      <div class="login-title">📚 图书管理系统</div>
-      <div class="login-subtitle">请输入账号密码登录</div>
+      <div class="login-icon">📦</div>
+      <div class="login-title">万能导入</div>
+      <div class="login-divider"></div>
+      <div class="login-subtitle">多模板自动导入下单系统</div>
       <el-form ref="formRef" :model="form" :rules="rules" size="large" @keyup.enter="handleLogin">
         <el-form-item prop="username">
           <el-input v-model="form.username" placeholder="请输入账号" prefix-icon="User" />

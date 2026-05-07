@@ -11,14 +11,20 @@ const routes = [
   {
     path: '/',
     component: () => import('@/views/Layout.vue'),
-    redirect: '/book',
+    redirect: '/order-import',
     meta: { requiresAuth: true },
     children: [
       {
-        path: 'book',
-        name: 'BookManage',
-        component: () => import('@/views/BookManage.vue'),
-        meta: { title: '图书管理', requiresAuth: true }
+        path: 'order-import',
+        name: 'OrderImport',
+        component: () => import('@/views/OrderImport.vue'),
+        meta: { title: '批量下单导入', requiresAuth: true }
+      },
+      {
+        path: 'order-list',
+        name: 'OrderList',
+        component: () => import('@/views/OrderList.vue'),
+        meta: { title: '已导入运单', requiresAuth: true }
       }
     ]
   }
@@ -30,7 +36,7 @@ const router = createRouter({
 })
 
 router.beforeEach((to, from, next) => {
-  document.title = to.meta.title ? `${to.meta.title} - 图书管理系统` : '图书管理系统'
+  document.title = to.meta.title ? `${to.meta.title} - 物流批量下单系统` : '物流批量下单系统'
   const userStore = useUserStore()
   if (to.meta.requiresAuth && !userStore.isLoggedIn()) {
     next({ path: '/login', query: { redirect: to.fullPath } })

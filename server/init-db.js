@@ -80,6 +80,42 @@ async function init() {
     }
     console.log('Initial books inserted or already exist.')
 
+    // 创建 orders 运单表
+    await sql`
+      CREATE TABLE IF NOT EXISTS orders (
+        id SERIAL PRIMARY KEY,
+        ext_code VARCHAR(100),
+        sender_name VARCHAR(100) NOT NULL,
+        sender_phone VARCHAR(50) NOT NULL,
+        sender_address TEXT NOT NULL,
+        receiver_name VARCHAR(100) NOT NULL,
+        receiver_phone VARCHAR(50) NOT NULL,
+        receiver_address TEXT NOT NULL,
+        weight NUMERIC(10,3) NOT NULL,
+        quantity INTEGER NOT NULL,
+        temperature_layer VARCHAR(20) NOT NULL,
+        remark TEXT,
+        status VARCHAR(20) DEFAULT 'submitted',
+        submit_batch_id VARCHAR(64),
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+      )
+    `
+    console.log('Table "orders" created or already exists.')
+
+    // 创建 template_mappings 模板映射记忆表
+    await sql`
+      CREATE TABLE IF NOT EXISTS template_mappings (
+        id SERIAL PRIMARY KEY,
+        header_fingerprint VARCHAR(64) UNIQUE NOT NULL,
+        headers JSONB NOT NULL,
+        mapping JSONB NOT NULL,
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+      )
+    `
+    console.log('Table "template_mappings" created or already exists.')
+
     // 验证
     const rows = await sql`SELECT * FROM users`
     console.log('Current users:', rows)

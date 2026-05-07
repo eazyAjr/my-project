@@ -5,6 +5,7 @@ import jwt from 'jsonwebtoken'
 import * as XLSX from 'xlsx'
 import dotenv from 'dotenv'
 import { sql } from './db.js'
+import { setupOrderRoutes } from './order-routes.js'
 
 dotenv.config()
 
@@ -290,6 +291,8 @@ app.post('/api/books/batch', authMiddleware, async (req, res) => {
     res.status(500).json({ success: false, message: err.message || '服务器内部错误' })
   }
 })
+
+setupOrderRoutes(app, sql, authMiddleware)
 
 app.listen(PORT, () => {
   console.log(`Server running on http://localhost:${PORT}`)

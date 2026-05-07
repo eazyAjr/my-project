@@ -1,33 +1,58 @@
 import { defineStore } from 'pinia'
 import { ref } from 'vue'
-import booksData from '@/mock/books.json'
+import request from '@/api/request'
+import axios from 'axios'
+import { getToken } from '@/utils/auth'
 
 export const useBookStore = defineStore('book', () => {
-  const books = ref(JSON.parse(JSON.stringify(booksData)))
-  let nextId = books.value.length > 0 ? Math.max(...books.value.map(b => b.id)) + 1 : 1
+  const books = ref([])
+  const total = ref(0)
 
-  function addBook(book) {
-    book.id = nextId++
-    books.value.push({ ...book })
-  }
-
-  function updateBook(id, data) {
-    const idx = books.value.findIndex(b => b.id === id)
-    if (idx !== -1) {
-      books.value[idx] = { ...books.value[idx], ...data }
+  async function getBooks(params = {}) {
+    const res = await request.get('/books', { params })
+    if (res.success) {
+      books.value = res.data
+      total.value = res.total
     }
+    return res
   }
 
-  function deleteBook(id) {
-    const idx = books.value.findIndex(b => b.id === id)
-    if (idx !== -1) books.value.splice(idx, 1)
+  async function addBook(book) {
+    const res = await request.post('/books', book)
+    return res
   }
 
-  function batchAdd(list) {
-    list.forEach(item => {
-      addBook(item)
+  async function updateBook(id, data) {
+    const res = await request.put(`/books/${id}`, data)
+    return res
+  }
+
+  async function deleteBook(id) {
+    const res = await request.delete(`/books/${id}`)
+    return res
+  }
+
+  async function exportBooks(params = {}) {
+    const token = getToken()
+    const res = await axios.get('/api/books/export', {
+      params,
+      responseType: 'blob',
+      headers: token ? { Authorization: `Bearer ${token}` } : {}
     })
+    const blob = new Blob([res.data], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' })
+    const url = URL.createObjectURL(blob)
+    const a = document.createElement('a')
+    a.href = url
+    a.download = '图书列表.xlsx'
+    a.click()
+    URL.revokeObjectURL(url)
+    return res
   }
 
-  return { books, addBook, updateBook, deleteBook, batchAdd }
+  async function importBooks(list) {
+    const res = await request.post('/books/batch', { list })
+    return res
+  }
+
+  return { books, total, getBooks, addBook, updateBook, deleteBook, exportBooks, importBooks }
 })

@@ -2,16 +2,19 @@ import express from 'express'
 import cors from 'cors'
 import bcrypt from 'bcryptjs'
 import jwt from 'jsonwebtoken'
-import dotenv from 'dotenv'
-import { sql } from '../server/db.js'
-
-dotenv.config()
+import { sql } from './_utils/db.js'
 
 const app = express()
 const JWT_SECRET = process.env.JWT_SECRET || 'your-secret-key-change-in-production'
 
 app.use(cors())
 app.use(express.json())
+
+// 全局错误处理
+app.use((err, req, res, next) => {
+  console.error('Unhandled error:', err)
+  res.status(500).json({ success: false, message: err.message || '服务器内部错误' })
+})
 
 // 健康检查
 app.get('/api/health', async (req, res) => {
@@ -67,7 +70,7 @@ app.post('/api/login', async (req, res) => {
     })
   } catch (err) {
     console.error('Login error:', err)
-    res.status(500).json({ success: false, message: '服务器内部错误' })
+    res.status(500).json({ success: false, message: err.message || '服务器内部错误' })
   }
 })
 

@@ -48,10 +48,7 @@ async function handleLogin() {
   if (!valid) return
 
   loading.value = true
-  // 模拟网络延迟
-  await new Promise(r => setTimeout(r, 500))
-
-  const result = userStore.login(form.username, form.password)
+  const result = await userStore.login(form.username, form.password)
   loading.value = false
 
   if (result.success) {

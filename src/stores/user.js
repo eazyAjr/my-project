@@ -1,24 +1,39 @@
 import { defineStore } from 'pinia'
 import { ref } from 'vue'
 import { setToken, setUser, clearAuth, getToken, getUser } from '@/utils/auth'
-import usersData from '@/mock/users.json'
+import request from '@/api/request'
 
 export const useUserStore = defineStore('user', () => {
   const token = ref(getToken() || '')
   const userInfo = ref(getUser() || null)
 
-  function login(username, password) {
-    const user = usersData.find(
-      u => u.username === username && u.password === password
-    )
-    if (!user) return { success: false, message: '账号或密码错误' }
+  async function login(username, password) {
+    try {
+      const res = await request.post('/login', { username, password })
+      if (res.success) {
+        token.value = res.token
+        userInfo.value = res.userInfo
+        setToken(res.token)
+        setUser(res.userInfo)
+        return { success: true }
+      }
+      return { success: false, message: res.message || '登录失败' }
+    } catch (err) {
+      return { success: false, message: err.response?.data?.message || '网络请求失败' }
+    }
+  }
 
-    const fakeToken = 'token_' + Date.now()
-    token.value = fakeToken
-    userInfo.value = { username: user.username, nickname: user.nickname, role: user.role }
-    setToken(fakeToken)
-    setUser(userInfo.value)
-    return { success: true }
+  async function fetchUserInfo() {
+    try {
+      const res = await request.get('/me')
+      if (res.success) {
+        userInfo.value = res.userInfo
+        setUser(res.userInfo)
+      }
+      return res
+    } catch {
+      return { success: false }
+    }
   }
 
   function logout() {
@@ -29,5 +44,5 @@ export const useUserStore = defineStore('user', () => {
 
   const isLoggedIn = () => !!token.value
 
-  return { token, userInfo, login, logout, isLoggedIn }
+  return { token, userInfo, login, logout, isLoggedIn, fetchUserInfo }
 })

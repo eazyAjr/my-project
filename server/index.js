@@ -260,7 +260,7 @@ app.get('/api/books/export', authMiddleware, async (req, res) => {
 
     const buf = XLSX.write(wb, { type: 'buffer', bookType: 'xlsx' })
     res.setHeader('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
-    res.setHeader('Content-Disposition', 'attachment; filename="图书列表.xlsx"')
+    res.setHeader('Content-Disposition', `attachment; filename="books.xlsx"; filename*=UTF-8''${encodeURIComponent('图书列表.xlsx')}`)
     res.send(buf)
   } catch (err) {
     console.error('Export error:', err)

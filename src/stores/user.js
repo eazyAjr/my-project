@@ -36,7 +36,12 @@ export const useUserStore = defineStore('user', () => {
     }
   }
 
-  function logout() {
+  async function logout() {
+    try {
+      await request.post('/logout')
+    } catch {
+      // 忽略网络错误，仍要清除本地状态
+    }
     token.value = ''
     userInfo.value = null
     clearAuth()

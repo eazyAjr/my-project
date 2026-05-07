@@ -36,14 +36,17 @@ const route = useRoute()
 const router = useRouter()
 const userStore = useUserStore()
 
-function handleLogout() {
-  ElMessageBox.confirm('确定要退出登录吗？', '提示', {
-    confirmButtonText: '确定',
-    cancelButtonText: '取消',
-    type: 'warning'
-  }).then(() => {
-    userStore.logout()
+async function handleLogout() {
+  try {
+    await ElMessageBox.confirm('确定要退出登录吗？', '提示', {
+      confirmButtonText: '确定',
+      cancelButtonText: '取消',
+      type: 'warning'
+    })
+    await userStore.logout()
     router.push('/login')
-  }).catch(() => {})
+  } catch {
+    // 取消或异常不处理
+  }
 }
 </script>

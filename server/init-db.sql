@@ -12,3 +12,14 @@ CREATE TABLE IF NOT EXISTS users (
 INSERT INTO users (username, password, nickname, role)
 VALUES ('admin', 'admin', '管理员', 'admin')
 ON CONFLICT (username) DO NOTHING;
+
+-- Token 黑名单表（用于服务端登出）
+CREATE TABLE IF NOT EXISTS token_blacklist (
+  id SERIAL PRIMARY KEY,
+  token TEXT UNIQUE NOT NULL,
+  expires_at TIMESTAMP NOT NULL,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+-- 自动清理过期黑名单 token 的索引（可选，提升查询性能）
+CREATE INDEX IF NOT EXISTS idx_token_blacklist_token ON token_blacklist(token);

@@ -23,6 +23,17 @@ async function init() {
     `
     console.log('Default admin user inserted or already exists.')
 
+    // 创建 token 黑名单表
+    await sql`
+      CREATE TABLE IF NOT EXISTS token_blacklist (
+        id SERIAL PRIMARY KEY,
+        token TEXT UNIQUE NOT NULL,
+        expires_at TIMESTAMP NOT NULL,
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+      )
+    `
+    console.log('Table "token_blacklist" created or already exists.')
+
     // 验证
     const rows = await sql`SELECT * FROM users`
     console.log('Current users:', rows)

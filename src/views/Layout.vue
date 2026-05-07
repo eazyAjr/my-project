@@ -5,10 +5,6 @@
         <span class="header-icon">📦</span>
         <span>万能导入 —— 多模板自动导入下单系统</span>
       </div>
-      <div class="header-right">
-        <el-tag>欢迎，{{ userStore.userInfo?.nickname }}</el-tag>
-        <el-button type="danger" text @click="handleLogout">退出登录</el-button>
-      </div>
     </div>
     <div class="layout-body">
       <div class="layout-aside">
@@ -31,26 +27,8 @@
 </template>
 
 <script setup>
-import { useRoute, useRouter } from 'vue-router'
-import { useUserStore } from '@/stores/user'
+import { useRoute } from 'vue-router'
 import { Upload, List } from '@element-plus/icons-vue'
-import { ElMessageBox } from 'element-plus'
 
 const route = useRoute()
-const router = useRouter()
-const userStore = useUserStore()
-
-async function handleLogout() {
-  try {
-    await ElMessageBox.confirm('确定要退出登录吗？', '提示', {
-      confirmButtonText: '确定',
-      cancelButtonText: '取消',
-      type: 'warning'
-    })
-    await userStore.logout()
-    router.push('/login')
-  } catch {
-    // 取消或异常不处理
-  }
-}
 </script>

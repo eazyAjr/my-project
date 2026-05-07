@@ -34,13 +34,8 @@ async function verifyToken(authHeader) {
   }
 }
 
-// 需要登录的中间件
+// 需要登录的中间件（已关闭认证，直接放行）
 async function authMiddleware(req, res, next) {
-  const result = await verifyToken(req.headers.authorization)
-  if (!result.valid) {
-    return res.status(401).json({ success: false, message: result.message })
-  }
-  req.user = result.decoded
   next()
 }
 
